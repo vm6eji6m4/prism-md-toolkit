@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+*.db
+packaged_*
+*_slices/
+*_temp.md
+.venv/

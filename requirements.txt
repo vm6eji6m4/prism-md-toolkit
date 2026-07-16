@@ -1,0 +1,5 @@
+# 必裝：PDF 提取（prism/extractor.py）
+pymupdf>=1.24
+
+# 選配：精確 token 計數（缺席時走 CJK 感知 fallback 估算）
+# tiktoken>=0.7
