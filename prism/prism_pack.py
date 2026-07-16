@@ -12,8 +12,9 @@ from tkinter.scrolledtext import ScrolledText
 
 # Configurations
 CACHE_VERSION = "v3.4"
-DEFAULT_SRC = r"D:\OpenClaw_Scripts\09_Skills"
-DEFAULT_OUT_DIR = r"D:\ANTIGRAVITY測試用\MD開發"
+# 公開版：不預設任何個人路徑；CLI 必須明給來源，輸出預設寫到「當前工作目錄」
+DEFAULT_SRC = ""
+DEFAULT_OUT_DIR = "."
 DEFAULT_OUT_FILE = "packaged_skills.md"
 DEFAULT_CHUNK_LIMIT = 500000  # Default token split limit
 MAX_FILE_SIZE_KB = 500  # Skip files larger than 500KB to save tokens
@@ -744,25 +745,25 @@ class PackagerApp:
             self.pack_button.config(state=tk.NORMAL)
 
 # Headless CLI Runner
-def run_cli_mode(src_input, lite_mode, summary_only):
+def run_cli_mode(src_input, lite_mode, summary_only, out_dir_arg=None):
     print("=" * 60)
     print("      AI 優化型 Markdown 打包工具 v3.4 (命令列版)      ")
     print("=" * 60)
     
-    if src_input:
-        input_path = Path(src_input)
-        if input_path.is_absolute() or input_path.exists():
-            src_path = input_path.resolve()
-        else:
-            src_path = (Path(DEFAULT_SRC) / src_input).resolve()
-    else:
-        src_path = Path(DEFAULT_SRC).resolve()
-        
+    if not src_input:
+        print("用法: python prism_pack.py <SOURCE_DIR> [-s|--summary] [-l|--lite] [-o 輸出目錄]")
+        sys.exit(1)
+    src_path = Path(src_input).resolve()
+
     if not src_path.exists():
         print(f"錯誤：來源路徑 '{src_path}' 不存在。")
         sys.exit(1)
         
-    out_dir = Path(DEFAULT_OUT_DIR).resolve()
+    out_dir = Path(out_dir_arg or DEFAULT_OUT_DIR).resolve()
+    # 安全閘：輸出不准落在來源樹內（沿用全工具箱鐵律）
+    if str(out_dir).lower().startswith(str(src_path).lower() + "\\") or out_dir == src_path:
+        print(f"拒絕：輸出目錄 {out_dir} 位於來源樹內，請用 -o 指定樹外路徑")
+        sys.exit(1)
     out_dir.mkdir(parents=True, exist_ok=True)
     out_file_path = out_dir / DEFAULT_OUT_FILE
     
@@ -796,13 +797,23 @@ def main():
     if "-s" in args or "--summary" in args:
         summary_only = True
         args = [a for a in args if a not in ("-s", "--summary")]
-        
+
+    out_dir_arg = None
+    for flag in ("-o", "--out"):
+        if flag in args:
+            i = args.index(flag)
+            if i + 1 >= len(args):
+                print(f"錯誤：{flag} 需要一個輸出目錄參數")
+                sys.exit(1)
+            out_dir_arg = args[i + 1]
+            args = args[:i] + args[i + 2:]
+
     if args:
         src_input = args[0]
-        
+
     if src_input and not interactive:
         # CLI Mode
-        run_cli_mode(src_input, lite_mode, summary_only)
+        run_cli_mode(src_input, lite_mode, summary_only, out_dir_arg)
     else:
         # GUI Mode
         root = tk.Tk()

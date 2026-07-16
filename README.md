@@ -17,8 +17,8 @@ pip install -r requirements.txt   # 只有 PyMuPDF 必裝
 # 1) 論文 → 導航包（--hybrid 加嵌核心章節原文）
 python prism/run_pipeline.py paper.pdf --hybrid
 
-# 2) 整個資料夾 → 打包（-s 摘要模式；不加 -s 走 Tkinter GUI）
-python prism/prism_pack.py <SOURCE_DIR> -s
+# 2) 整個資料夾 → 打包（-s 只出索引；-o 指定輸出目錄，預設 cwd；無參數=Tkinter GUI）
+python prism/prism_pack.py <SOURCE_DIR> -o <OUT_DIR>
 
 # 3) Python 專案 → API 地圖（輸出禁寫來源樹）
 python tools/code_api_map.py <PROJECT_DIR> -o API_MAP.md --db api.db

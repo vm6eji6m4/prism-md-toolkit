@@ -8,3 +8,5 @@
 - **prism_pack 單體**：813 行含 Tkinter GUI，待拆分。
 - **Windows 優先**：路徑安全閘以 Windows 語意實測；POSIX symlink/mount 情境未測。
 - **txt2md fence 規則**：`>100 行或含 error/traceback` 才包 code fence，散文/資料混合檔判定粗糙。
+- **prism_pack 無參數＝GUI 模式**：headless 環境行為未定義；CI 請一律帶來源參數。
+- **輸出檔名固定 `packaged_skills.md`**：`-o` 只能指定目錄，不能改檔名（多來源打包會互相覆蓋）。
