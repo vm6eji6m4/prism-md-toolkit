@@ -612,7 +612,7 @@ class PackagerApp:
         self.dest_entry = ttk.Entry(dest_frame, width=60)
         self.dest_entry.grid(row=0, column=1, padx=5, pady=5, sticky=tk.EW)
         
-        default_dest = os.path.join("D:\\", "ANTIGRAVITY測試用", "MD開發", "packaged_output.md")
+        default_dest = os.path.join(os.getcwd(), "packaged_output.md")
         self.dest_entry.insert(0, default_dest)
         
         ttk.Button(dest_frame, text="瀏覽...", command=self.browse_dest).grid(row=0, column=2, padx=5, pady=5)

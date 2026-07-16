@@ -17,7 +17,7 @@
 | Q5 安全閘是否足夠 | **❌ 我方防線被否決**：`.startswith()` 字串比對擋不住 symlink／UNC（`\\localhost\c$`）／大小寫繞過 |
 | Q6 事故敘事入 README | **YES，大加分**（Postmortem-driven engineering） |
 | Q7 差異化足以立足 | **YES**（星等＋混合包＋溯源頭＋安全閘） |
-| Q8 直排 CJK | **UNKNOWN→條件式**：若訓文是硬需求，PyMuPDF text direction API 判向＝最高 ROI；OCR 過重 |
+| Q8 直排 CJK | **UNKNOWN→條件式**：若直排文書是硬需求，PyMuPDF text direction API 判向＝最高 ROI；OCR 過重 |
 
 ## 上架前必改 TOP3（已全數執行並以測試固化）
 1. **路徑安全閘升級**（Q5 敗訴的處置）：三支工具統一改 `realpath＋normcase＋commonpath` 層級判定

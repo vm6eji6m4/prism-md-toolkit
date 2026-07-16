@@ -66,7 +66,7 @@ class TestTokenEstimate(unittest.TestCase):
     """W1：CJK fallback 不得退回英文換算率（len//4）"""
 
     def test_cjk_floor(self):
-        zh = "佛堂影片語意檢索站" * 20  # 180 個中文字
+        zh = "知識封裝導航協定測試" * 18  # 180 個中文字
         est = prism_pack.estimate_tokens(zh)
         self.assertGreaterEqual(est, len(zh) // 2)  # 遠高於 len//4
 
