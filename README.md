@@ -5,7 +5,8 @@
 
 | 工具 | 一句話 | 依賴 |
 |---|---|---|
-| [`prism/`](prism/) **PRISM 封裝管線** | PDF/論文/整個專案資料夾 → 星等分級導航包＋manifest（每檔 sha256/tokens/星等/AI 摘要）＋混合包（核心章節嵌原文） | PyMuPDF；tiktoken 選配 |
+| [`prism/`](prism/) **PRISM 封裝管線** | 整個專案資料夾 → 星等分級導航包＋manifest（每檔 sha256/tokens/星等/AI 摘要） | PyMuPDF；tiktoken 選配 |
+| [`prism/run_pipeline.py`](prism/run_pipeline.py) **論文開發器（Paper Pipeline）** | 論文/專利 PDF → 章節切片 → 導航包＋混合包（核心章節嵌原文）；五語料實測見 [docs/PAPER_PIPELINE_EVAL.md](docs/PAPER_PIPELINE_EVAL.md) | 同上 |
 | [`tools/code_api_map.py`](tools/code_api_map.py) **CODE API MAP** | Python 專案 → AST 決定論 API 骨架地圖（md＋sqlite），委外/網頁端 LLM 帶著走，實測省 ~80% token | 純標準庫 |
 | [`tools/txt2md_copy.py`](tools/txt2md_copy.py) **TXT→MD 安全轉檔** | .txt 素材 → 帶溯源頭的 .md 副本，餵 Obsidian/RAG/打包器；**永不動原檔** | 純標準庫 |
 
