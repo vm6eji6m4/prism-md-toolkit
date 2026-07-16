@@ -139,4 +139,4 @@ MIT ([LICENSE](LICENSE); non-official Chinese reference translation: [docs/LICEN
 
 ## Provenance
 
-Drafted by an execution agent, then verified, bug-fixed and hardened by a review agent; reviewed by three independent AI reviewers before release (full audit trail, in Chinese, kept verbatim: [docs/REVIEW_VERDICT_20260717.md](docs/REVIEW_VERDICT_20260717.md)). Product owner: [vm6eji6m4](https://github.com/vm6eji6m4) (Guoyu).
+Drafted by an execution agent, then verified, bug-fixed and hardened by a review agent; reviewed by three independent AI reviewers before release — condensed audit summary: [docs/AUDIT_LOG.md](docs/AUDIT_LOG.md). Product owner: [vm6eji6m4](https://github.com/vm6eji6m4) (Guoyu).
