@@ -11,12 +11,24 @@ txt2md_copy.py — 安全版 TXT→MD 知識庫轉檔器（只複製、永不就
 輸出目錄必須在來源樹之外；預設 dry-run 列清單，加 --run 才真寫。
 """
 import argparse
+import os
 import sys
 from pathlib import Path
 
 SKIP_DIRS = {".venv", "venv", "node_modules", "__pycache__", ".git",
              "dist", "build", "runtime", ".dtrash", "$recycle.bin",
              "system volume information", ".archive", ".quarantine"}
+
+
+def is_within(child, ancestor) -> bool:
+    """嚴格層級判定（2026-07-17 外審 TOP1）：realpath 解 symlink、normcase 防大小寫繞過，
+    commonpath 防 UNC/前綴字串誤判（'D:\\a' 不會誤中 'D:\\ab'）。跨磁碟直接 False。"""
+    c = os.path.normcase(os.path.realpath(str(child)))
+    a = os.path.normcase(os.path.realpath(str(ancestor)))
+    try:
+        return os.path.commonpath([c, a]) == a
+    except ValueError:
+        return False
 
 
 def convert(src_root: Path, out_root: Path, run: bool) -> dict:
@@ -54,11 +66,12 @@ def main():
     src, out = Path(a.source).resolve(), Path(a.output).resolve()
     if not src.is_dir():
         sys.exit(f"來源不存在: {src}")
-    # 安全閘 1：輸出不准在來源樹內
-    if str(out).lower().startswith(str(src).lower() + "\\") or out == src:
+    # 安全閘 1：輸出不准在來源樹內（realpath 層級判定，防 symlink/UNC/大小寫繞過）
+    if is_within(out, src):
         sys.exit("拒絕：輸出目錄在來源樹內")
-    # 安全閘 2：來源禁止整顆磁碟根（根目錄的 parent 是自己）
-    if src.parent == src:
+    # 安全閘 2：來源禁止整顆磁碟根／網路共享根（根目錄的 parent 是自己）
+    real_src = Path(os.path.realpath(str(src)))
+    if real_src.parent == real_src:
         sys.exit("拒絕：不接受磁碟根目錄當來源（07-15 全槽事故教訓）")
     stats = convert(src, out, a.run)
     print(f"[{'RUN' if a.run else 'DRY-RUN'}] {stats}")

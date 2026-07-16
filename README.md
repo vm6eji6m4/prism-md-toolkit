@@ -1,5 +1,6 @@
-# PRISM MD Toolkit — LLM 知識封裝三件組
-> Markdown-native knowledge packaging for LLM consumption: bundle anything → prioritized, navigable, auditable MD.
+# PRISM MD Toolkit — LLM Knowledge Packaging Protocol
+> Make AI read your project the same way humans do: **map first, details on demand.**
+> 把混沌資料變成 LLM 最佳閱讀路徑——星等分級、可導航、可稽核的 Markdown 知識包。
 
 把「一整包混沌資料」變成 **LLM 最佳閱讀路徑**的三件工具。共同哲學：**先給地圖、再按需取件**（Progressive Disclosure），以及一條用生產事故換來的鐵律——**給人和 LLM 讀的才轉 MD；給程式讀的永遠保持原格式**。
 
@@ -18,7 +19,7 @@ pip install -r requirements.txt   # 只有 PyMuPDF 必裝
 # 1) 論文 → 導航包（--hybrid 加嵌核心章節原文）
 python prism/run_pipeline.py paper.pdf --hybrid
 
-# 2) 整個資料夾 → 打包（-s 只出索引；-o 指定輸出目錄，預設 cwd；無參數=Tkinter GUI）
+# 2) 整個資料夾 → 打包（-s 只出索引；-o 指定輸出目錄，預設 cwd；GUI 需顯式 --gui）
 python prism/prism_pack.py <SOURCE_DIR> -o <OUT_DIR>
 
 # 3) Python 專案 → API 地圖（輸出禁寫來源樹）
@@ -50,8 +51,12 @@ tokenizer（`merges.txt`）、`requirements.txt`、build 檔等 4,000+ 個「給
 ## 實測數字（驗收紀錄）
 
 - 1,385 檔（1.69M est. tokens）工作區 → 3 個 md part＋manifest，審核者僅靠 manifest 聚合完成全區理解
-- line-ollama-engine 全樹 47 模組/183 函數 → 21KB API 地圖（~5.3k tokens）
+- 真實專案全樹 47 模組/183 函數 → 21KB API 地圖（~5.3k tokens）
+- 表格污染防線：5.8MB 綜述論文切片 45→16（29 片表格垃圾清除、真章節零損失）
 - 壞 PDF 負對照：`FileDataError` 立即失敗，零假輸出
+- `tests/` 10 條零依賴 unittest（含每道安全閘的負對照），`python -m unittest discover tests`
+
+三家獨立 AI 評審（GPT A-／Grok B+／Gemini 逐題裁決）與上架前修復紀錄：[docs/REVIEW_VERDICT_20260717.md](docs/REVIEW_VERDICT_20260717.md)
 
 ## Provenance
 

@@ -20,6 +20,21 @@ def clean_filename(name: str) -> str:
     name = re.sub(r"[^\w\s-]", "", name).strip().replace(" ", "_")
     return name[:30]
 
+def looks_like_real_heading(text: str) -> bool:
+    """表格列誤判防線（2026-07-17 外審共識 TOP3）。
+
+    extractor 會把 PDF 中粗體短行升格成 '##' 標題，綜述論文的表格列
+    （如 '1024 TPU v3'）因此被誤切成章節。真標題應以字母/中文為主體：
+    數字或符號密度過高者視為表格/資料列，併回所屬章節不另起切片。
+    """
+    t = text.strip()
+    if not t or len(t) > 80:
+        return False
+    core = t.replace(" ", "")
+    alpha = sum(c.isalpha() for c in core)
+    digit = sum(c.isdigit() for c in core)
+    return alpha / len(core) >= 0.55 and digit / len(core) <= 0.30
+
 def split_markdown_paper(md_path: Path, output_dir: Path) -> list[Path]:
     """
     Splits a single Markdown paper file into multiple section files based on headings.
@@ -60,7 +75,7 @@ def split_markdown_paper(md_path: Path, output_dir: Path) -> list[Path]:
         if stripped.startswith("#"):
             # Match # or ## or ###
             match = re.match(r"^#+\s+(.*)", stripped)
-            if match:
+            if match and looks_like_real_heading(match.group(1)):
                 is_heading = True
                 heading_text = match.group(1).strip()
         else:

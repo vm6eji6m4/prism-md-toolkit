@@ -6,9 +6,24 @@ import hashlib
 from pathlib import Path
 from datetime import datetime
 
-import tkinter as tk
-from tkinter import ttk, filedialog, messagebox
-from tkinter.scrolledtext import ScrolledText
+# GUI 為選配（外審 TOP2）：headless/CI 環境沒有 Tk 也要能跑 CLI，故懶載入
+try:
+    import tkinter as tk
+    from tkinter import ttk, filedialog, messagebox
+    from tkinter.scrolledtext import ScrolledText
+    _TK_AVAILABLE = True
+except Exception:  # noqa: BLE001
+    _TK_AVAILABLE = False
+
+
+def is_within(child, ancestor) -> bool:
+    """嚴格層級判定（外審 TOP1）：realpath+normcase+commonpath，防 symlink/UNC/大小寫繞過。"""
+    c = os.path.normcase(os.path.realpath(str(child)))
+    a = os.path.normcase(os.path.realpath(str(ancestor)))
+    try:
+        return os.path.commonpath([c, a]) == a
+    except ValueError:
+        return False
 
 # Configurations
 CACHE_VERSION = "v3.4"
@@ -760,8 +775,8 @@ def run_cli_mode(src_input, lite_mode, summary_only, out_dir_arg=None):
         sys.exit(1)
         
     out_dir = Path(out_dir_arg or DEFAULT_OUT_DIR).resolve()
-    # 安全閘：輸出不准落在來源樹內（沿用全工具箱鐵律）
-    if str(out_dir).lower().startswith(str(src_path).lower() + "\\") or out_dir == src_path:
+    # 安全閘：輸出不准落在來源樹內（realpath 層級判定，全工具箱鐵律）
+    if is_within(out_dir, src_path):
         print(f"拒絕：輸出目錄 {out_dir} 位於來源樹內，請用 -o 指定樹外路徑")
         sys.exit(1)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -779,16 +794,21 @@ def run_cli_mode(src_input, lite_mode, summary_only, out_dir_arg=None):
         progress_callback=None
     )
 
+USAGE = ("用法: python prism_pack.py <SOURCE_DIR> [-s|--summary] [-l|--lite] [-o 輸出目錄]\n"
+         "      python prism_pack.py --gui   # 明確啟動 Tkinter 介面（headless 環境勿用）")
+
+
 def main():
     interactive = False
     lite_mode = False
     summary_only = False
     src_input = ""
-    
+
     args = sys.argv[1:]
-    if "-i" in args or "--interactive" in args:
+    # 外審 TOP2：GUI 必須顯式要求；無參數一律印 usage，CI/headless 不會卡死
+    if "--gui" in args or "-i" in args or "--interactive" in args:
         interactive = True
-        args = [a for a in args if a not in ("-i", "--interactive")]
+        args = [a for a in args if a not in ("--gui", "-i", "--interactive")]
         
     if "-l" in args or "--lite" in args:
         lite_mode = True
@@ -814,11 +834,18 @@ def main():
     if src_input and not interactive:
         # CLI Mode
         run_cli_mode(src_input, lite_mode, summary_only, out_dir_arg)
-    else:
-        # GUI Mode
+    elif interactive:
+        # GUI Mode（僅 --gui 顯式要求時）
+        if not _TK_AVAILABLE:
+            print("錯誤：此環境沒有 Tkinter，無法啟動 GUI。請改用 CLI 模式。")
+            print(USAGE)
+            sys.exit(1)
         root = tk.Tk()
         app = PackagerApp(root)
         root.mainloop()
+    else:
+        print(USAGE)
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
