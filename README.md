@@ -124,7 +124,8 @@ One rule runs through every tool, learned from the incident above: **convert to 
 ## Roadmap
 
 - [x] Folder packing · paper pipeline · API map · safe TXT import
-- [ ] Consumption guidelines embedded in packs (map-first reading rules, Top-N budget, reading ledger)
+- [x] `--skill` mode: Agent Skills compatible packs (reading rules + Reading Ledger + machine-checkable `verify_ledger()`)
+- [ ] Harness-side smallest-first serving for local single-shot models (rules alone don't fix budget starvation — see MAP_VALUE_EVAL)
 - [ ] Split the packer monolith (core / cli / gui)
 - [ ] YAML-configurable priority rules + plugin hooks
 - [ ] llms.txt export

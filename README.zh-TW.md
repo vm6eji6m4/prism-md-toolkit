@@ -124,7 +124,8 @@ PRISM 一開始只是個小實驗：「MD 比 TXT 好讀，還順便省 token」
 ## Roadmap
 
 - [x] 資料夾打包 · 論文管線 · API 地圖 · 安全 TXT 轉檔
-- [ ] 消費守則入包（map-first 閱讀規則、Top-N 預算、閱讀台帳）
+- [x] `--skill` 模式：Agent Skills 相容知識包（閱讀規則＋Reading Ledger＋機器對賬 `verify_ledger()`）
+- [ ] harness 端小檔優先供檔（本機單發模型必需——守則文字救不了預算餓死，見 MAP_VALUE_EVAL）
 - [ ] 拆分打包器單體（core／cli／gui）
 - [ ] 星等規則 YAML 化＋plugin 掛鉤
 - [ ] llms.txt 匯出

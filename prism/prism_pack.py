@@ -795,6 +795,8 @@ def run_cli_mode(src_input, lite_mode, summary_only, out_dir_arg=None):
     )
 
 USAGE = ("用法: python prism_pack.py <SOURCE_DIR> [-s|--summary] [-l|--lite] [-o 輸出目錄]\n"
+         "      python prism_pack.py <SOURCE_DIR> --skill [--template qa|review|evidence] [-o 輸出目錄]\n"
+         "                                   # 輸出 Agent Skills 相容知識包（<來源>-skill/）\n"
          "      python prism_pack.py --gui   # 明確啟動 Tkinter 介面（headless 環境勿用）")
 
 
@@ -802,6 +804,8 @@ def main():
     interactive = False
     lite_mode = False
     summary_only = False
+    skill_mode = False
+    skill_template = "qa"
     src_input = ""
 
     args = sys.argv[1:]
@@ -809,14 +813,25 @@ def main():
     if "--gui" in args or "-i" in args or "--interactive" in args:
         interactive = True
         args = [a for a in args if a not in ("--gui", "-i", "--interactive")]
-        
+
     if "-l" in args or "--lite" in args:
         lite_mode = True
         args = [a for a in args if a not in ("-l", "--lite")]
-        
+
     if "-s" in args or "--summary" in args:
         summary_only = True
         args = [a for a in args if a not in ("-s", "--summary")]
+
+    if "--skill" in args:
+        skill_mode = True
+        args = [a for a in args if a != "--skill"]
+    if "--template" in args:
+        i = args.index("--template")
+        if i + 1 >= len(args):
+            print("錯誤：--template 需要參數（qa|review|evidence）")
+            sys.exit(1)
+        skill_template = args[i + 1]
+        args = args[:i] + args[i + 2:]
 
     out_dir_arg = None
     for flag in ("-o", "--out"):
@@ -831,7 +846,16 @@ def main():
     if args:
         src_input = args[0]
 
-    if src_input and not interactive:
+    if src_input and skill_mode:
+        # Agent Skills 相容輸出（v-next.1）；沿用同一道樹外輸出安全閘（在 build_skill 內）
+        import skill_pack
+        src_path = Path(src_input).resolve()
+        if not src_path.exists():
+            print(f"錯誤：來源路徑 '{src_path}' 不存在。")
+            sys.exit(1)
+        skill_pack.build_skill(src_path, Path(out_dir_arg or DEFAULT_OUT_DIR),
+                               template=skill_template)
+    elif src_input and not interactive:
         # CLI Mode
         run_cli_mode(src_input, lite_mode, summary_only, out_dir_arg)
     elif interactive:
