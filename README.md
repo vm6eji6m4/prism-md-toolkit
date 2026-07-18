@@ -109,6 +109,7 @@ All gates are covered by **negative-control tests** (proving they actually refus
 
 | Scenario | Result |
 |---|---|
+| 12-cell map-value A/B (3 models × 2 corpora) | on a 45-file repo the map lifted accuracy 6.5 → 8 of 8 with correct sources — at ~24% **more** tokens. The map saves errors, not tokens ([details](docs/MAP_VALUE_EVAL.md)) |
 | 1,385-file workspace (~1.69M est. tokens) | 3 md parts + manifest; full audit completed from manifest alone |
 | Python project, 47 modules / 183 functions | 21 KB API map (~5.3k tokens) |
 | 5.8 MB survey paper with heavy tables | slices 45 → 16, zero real sections lost |
@@ -123,6 +124,7 @@ One rule runs through every tool, learned from the incident above: **convert to 
 ## Roadmap
 
 - [x] Folder packing · paper pipeline · API map · safe TXT import
+- [ ] Consumption guidelines embedded in packs (map-first reading rules, Top-N budget, reading ledger)
 - [ ] Split the packer monolith (core / cli / gui)
 - [ ] YAML-configurable priority rules + plugin hooks
 - [ ] llms.txt export

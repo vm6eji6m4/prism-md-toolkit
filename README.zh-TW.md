@@ -109,6 +109,7 @@ pack/
 
 | 場景 | 結果 |
 |---|---|
+| 12-cell 地圖價值 A/B（3 模型 × 2 語料） | 45 檔 repo 上地圖把答對率 6.5 → 8/8 且出處全對——代價是 token **多** 24%。地圖省的是錯誤，不是 token（[詳情](docs/MAP_VALUE_EVAL.md)） |
 | 1,385 檔工作區（約 169 萬 est. tokens） | 3 個 md part＋manifest；評審只靠 manifest 完成全區稽核 |
 | Python 專案 47 模組／183 函數 | 21KB API 地圖（約 5.3k tokens） |
 | 5.8MB 重表格綜述論文 | 切片 45 → 16，真章節零損失 |
@@ -123,6 +124,7 @@ PRISM 一開始只是個小實驗：「MD 比 TXT 好讀，還順便省 token」
 ## Roadmap
 
 - [x] 資料夾打包 · 論文管線 · API 地圖 · 安全 TXT 轉檔
+- [ ] 消費守則入包（map-first 閱讀規則、Top-N 預算、閱讀台帳）
 - [ ] 拆分打包器單體（core／cli／gui）
 - [ ] 星等規則 YAML 化＋plugin 掛鉤
 - [ ] llms.txt 匯出
