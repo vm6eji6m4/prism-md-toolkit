@@ -37,7 +37,7 @@ Four capabilities, one toolkit:
 
 ### 📦 PRISM Pack — package any folder
 
-Whole repository → star-prioritized navigation pack + manifest (sha256 / token estimate / priority / summary per file). Streaming output — 10k+ file trees won't exhaust memory.
+Whole repository → star-prioritized navigation pack + manifest (sha256 / token estimate / priority / summary per file). Streaming output — 10k+ file trees won't exhaust memory. Does the map actually help? Honest 12-cell A/B evaluation (3 models × 2 corpora, traps as negative controls): [docs/MAP_VALUE_EVAL.md](docs/MAP_VALUE_EVAL.md).
 
 ### 📄 PRISM Paper Pipeline — package papers & patents
 
