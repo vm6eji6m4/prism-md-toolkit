@@ -14,5 +14,8 @@
 - **txt2md fence 規則**：`>100 行或含 error/traceback` 才包 code fence，散文/資料混合檔判定粗糙。
 - **輸出檔名固定 `packaged_skills.md`**：`-o` 只能指定目錄，不能改檔名（多來源打包會互相覆蓋）。
 - **prism_pack 單體待拆**（core/cli/gui 分層＝外審共識 P1）；星等規則硬編待外部化（YAML）。
+- **`--skill` 守則＝引導非強制**：Agent Skills 格式只保證「何時載入」，不保證模型照做；台帳聲稱必須用 `verify_ledger()` 對供檔記錄驗證（實測抓過小模型捏造已讀清單）。
+- **`--skill` × 本機單發小模型 × 大語料仍會預算餓死**：守則文字救不了 fetch 順序；harness 端小檔優先供檔在 Roadmap（詳 MAP_VALUE_EVAL 追記）。
+- **密鑰掃描＝regex 家族版**：最後防線非完整方案，CI 級掃描請用 Secretlint／GitHub secret scanning。
 - **無結構化 logging**：目前 print 為主；錯誤處理有寬泛 `except Exception`。
 - **記憶體**：目錄樹與 metadata 清單全載記憶體，百萬檔級 repo 有 O(N) 風險。

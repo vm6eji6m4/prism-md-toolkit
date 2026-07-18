@@ -29,15 +29,19 @@ A human engineer never reads a project file-by-file:
 README → architecture → entry points → core logic → details only when needed
 ```
 
-PRISM packages that exact reading order for AI: a project map, star-priority ranking, per-file summaries, and an auditable manifest — so the model reads 5% and understands 95%. This matters double for **local model deployments**, where every context token is expensive.
+PRISM packages that exact reading order for AI: a project map, star-priority ranking, per-file summaries, and an auditable manifest. In our 12-cell A/B evaluation this lifted answer accuracy from 6.5 to 8 of 8 with correct source attribution on a 45-file repo — **the map saves errors, not tokens**. (The honest exception: local single-shot models also need harness-side serving help — see the eval.)
 
 ## Features
 
-Four capabilities, one toolkit:
+Five capabilities, one toolkit:
 
 ### 📦 PRISM Pack — package any folder
 
 Whole repository → star-prioritized navigation pack + manifest (sha256 / token estimate / priority / summary per file). Streaming output — 10k+ file trees won't exhaust memory. Does the map actually help? Honest 12-cell A/B evaluation (3 models × 2 corpora, traps as negative controls): [docs/MAP_VALUE_EVAL.md](docs/MAP_VALUE_EVAL.md).
+
+### 🎓 PRISM Skill Pack — `--skill` mode
+
+Any folder → an [Agent Skills](https://agentskills.io) compatible pack: `SKILL.md` (reading rules + Reading Ledger spec + star map) + smallest-first ranked `references/` + sha256 manifest. Rules are guidance, not enforcement — so `verify_ledger()` machine-checks every ledger claim against what was actually served (in our retest it caught a small model claiming to have read 5 files it was never given).
 
 ### 📄 PRISM Paper Pipeline — package papers & patents
 
@@ -58,6 +62,9 @@ pip install -r requirements.txt   # PyMuPDF only (see license note below)
 
 # Package a folder
 python prism/prism_pack.py <SOURCE_DIR> -o <OUT_DIR>
+
+# Package as an Agent Skills compatible pack (rules + Reading Ledger + map)
+python prism/prism_pack.py <SOURCE_DIR> --skill -o <OUT_DIR> --template qa
 
 # Package a paper (--hybrid embeds core sections in full)
 python prism/run_pipeline.py paper.pdf --hybrid
@@ -101,9 +108,10 @@ A predecessor of this toolkit once renamed 4,000+ `.txt` files **in place** acro
 - **Dry-run by default** — writing requires explicit `--run`
 - Every converted file carries a `# original-filename` provenance header → verifiable, precisely reversible
 - Path gates use `realpath + normcase + commonpath` (symlink / UNC / case / string-prefix bypasses closed)
+- **Pre-pack secret scan** (`--skill` mode) — files matching credential patterns (API keys, tokens, private keys) are excluded from the pack and recorded in the manifest
 
 All gates are covered by **negative-control tests** (proving they actually refuse):
-`python -m unittest discover tests` — 10 stdlib-only cases, green on Python 3.11/3.14.
+`python -m unittest discover tests` — 20 stdlib-only cases, green on Python 3.11/3.14.
 
 ## Benchmarks
 
