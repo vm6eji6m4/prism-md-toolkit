@@ -136,6 +136,7 @@ PRISM 一開始只是個小實驗：「MD 比 TXT 好讀，還順便省 token」
 - [ ] harness 端小檔優先供檔（本機單發模型必需——守則文字救不了預算餓死，見 MAP_VALUE_EVAL）
 - [ ] 拆分打包器單體（core／cli／gui）
 - [ ] 星等規則 YAML 化＋plugin 掛鉤
+- [ ] 內容型語料的領域 priority profile——程式碼倉判準對散文/文件集會攤平成全同級（見 KNOWN_ISSUES），priority＋summary 需按領域換一套函式；並在垂直星等地圖上疊一層水平 facet 交叉索引（誰・何時・主題），內容型語料兩層都要
 - [ ] llms.txt 匯出
 - [ ] CI＋PyPI 打包
 - [ ] 直排中文 PDF 支援（最硬的一塊——見 KNOWN_ISSUES）

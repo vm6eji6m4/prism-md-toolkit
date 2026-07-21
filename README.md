@@ -136,6 +136,7 @@ One rule runs through every tool, learned from the incident above: **convert to 
 - [ ] Harness-side smallest-first serving for local single-shot models (rules alone don't fix budget starvation — see MAP_VALUE_EVAL)
 - [ ] Split the packer monolith (core / cli / gui)
 - [ ] YAML-configurable priority rules + plugin hooks
+- [ ] Domain priority profiles for content corpora — the code-repo heuristic flattens to uniform stars on prose/document sets (see KNOWN_ISSUES), so priority + summary need a per-domain function; plus a horizontal facet / cross-index layer (who · when · topic) atop the vertical priority map, since content corpora need both
 - [ ] llms.txt export
 - [ ] CI + PyPI packaging
 - [ ] Vertical CJK PDF support (the hard one — see KNOWN_ISSUES)
